@@ -1,0 +1,166 @@
+@charset "UTF-8";
+
+/*背景图片*/
+body{
+	background: url('../images/bg1.jpg') no-repeat;	
+}
+
+/*头div*/
+#divHead{
+	width: 1000px;
+	height: 120px;
+	margin: 0 auto;
+	border: 0px solid blue;
+	background-color: #3DB3E1;
+	border-radius: 8px 8px 0px 0px;
+	/*background: url('../images/Head.jpg') repeat;	*/
+
+}
+
+/*主div*/
+#divMain{
+	width: 1000px;
+	height: 410px;
+	margin: 0 auto;
+	border: 0px solid green;
+}
+
+/*装载展示图片*/
+#divPhoto{
+	width: 400px;
+	height: 400px;
+	margin-top: -20px;
+	margin-right: 30px;
+	border: 0px solid red;
+	float: left;
+	background: url("../images/photo_Login.jpg") no-repeat;
+	border-radius: 0px 0px 0px 8px;
+}
+
+/*系统标题*/
+#Head_title{
+	margin-top: 50px;
+	padding-top: 40px;
+	font-family: 楷体;
+	font-size: 40px;
+	color: #E61542;
+	text-align: center;
+}
+
+/*装载form表单*/
+#divForm{
+	width: 510px;
+	height: 300px;
+	margin: 0 auto;
+	border: 0px solid red;
+	float: left;
+}
+
+/*副标题*/
+#login_title{
+	margin-top: 20px;
+	margin-bottom: 10px;
+	font-family: 楷体;
+	font-size: 40px;
+	color: #20225F;
+	text-align: center;
+}
+/*form表单*/
+table{
+	width: 500px;
+	height: 280px;
+	border-collapse:collapse;
+	border: 0px solid #A0A0A0;
+	
+}
+
+/*增加表格内边框*/
+th{
+	width: 100px;
+	border-radius: 5px 0px 0px 5px;
+}
+td{
+	border-radius: 0px 5px 5px 0px;
+}
+td,th{
+	border:1px solid #A0A0A0;
+}
+
+/*给表格添加颜色*/
+#first_Line{
+	background-color: aqua;
+}
+#second_Line{
+	/*background-color: #73F642;*/
+}
+#third_Line{
+	background-color: aqua;
+}
+
+
+/*用户名、密码输入框*/
+#user_text,#pwd_text{
+	width: 200px;
+	height: 25px;
+	margin-left: 15px;
+	border-radius: 5px;
+	border-style: solid;
+}
+
+/*验证码*/
+#verify_text{
+	width: 80px;
+	height: 25px;
+	margin-left: 15px;
+	border-radius: 5px;
+	border-style: solid;
+}
+
+/*给登录注册按钮添加右边距，更美观*/
+#login,#register{
+	margin-right: 20px;
+}
+
+/*未输入用户名密码时的提示*/
+#user_span,#reg1_span,#pwd_span,#reg2_span,#verify_span,#login_span{
+	display: none;
+	color: red;
+}
+
+#check_span,#login_span{
+	
+	margin-left: 15px;
+	color: red;
+}
+
+/*验证码框*/
+#randImage{
+	width: 80px; 
+	height: 28px; 
+	margin-right: 10px;
+	vertical-align:middle;/*垂直居中*/
+	border: 1px solid blue; 
+}
+
+/*三个按钮水平居中*/
+#btn{
+	padding-top: 20px;
+	text-align: center;
+	border: 0px;
+}
+
+/*按钮圆角化*/
+#login,#register,#emptyAll{
+	
+	width:80px;
+	height:40px;
+	border-radius: 4px;
+	cursor: pointer;
+	background-color: #59BFF0;
+	text-shadow: 1px 0px 0px;
+}
+
+/*给输入框增加颜色*/
+input:focus{
+	border-color: #51F785;
+}

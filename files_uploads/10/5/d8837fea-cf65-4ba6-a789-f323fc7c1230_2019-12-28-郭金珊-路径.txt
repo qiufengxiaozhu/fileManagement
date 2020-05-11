@@ -1,0 +1,3 @@
+http://localhost:8080/mm/news/mmNews
+
+PMS账号qgq191202    密码qiang5567  登录链接http://10.81.36.91:81/zentao/

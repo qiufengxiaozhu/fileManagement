@@ -1,0 +1,96 @@
+@charset "UTF-8";
+
+body{
+	overflow-x : hidden;   /*去掉横条 */
+    overflow-y : hidden;   /*去掉竖条 */
+}
+
+/*通讯录div*/
+#address_list{
+	width: 98.9%;
+	height: 580px;
+	margin:-5px 0px 0px -5px;
+	padding: 20px 0px 0px 20px;
+	border: 1px solid blue;
+}
+
+/*标题*/
+#Head_title{	
+	margin-bottom: 10px;
+	font-family: 楷体;
+	font-size: 26px;
+	color: #1B1718;
+}
+
+/*表单*/
+#info_table{
+	width: 98%;
+	margin-left: 0px;
+	border-collapse:collapse;
+	border: 1px solid green;
+}
+
+/*增加表格内边框*/
+td,th{
+	border:1px solid green;
+}
+
+/*表标题*/
+tr{
+	height: 30px;
+	text-align: center;
+}
+
+/*表格最后一列*/
+#img_btn{
+	width: 70px;
+}
+
+/*超链接*/
+a{	
+	text-decoration: none;
+	color: #F6F02D;
+}
+
+/*翻页*/
+#paging{
+	margin-top: 20px;
+	text-align: center;
+}
+
+/*跳转页*/
+h4{
+	margin-top: 15px;
+	text-align: center;
+}
+
+/*跳转页提交按钮*/
+#page_turning{
+	border: none;
+	border-radius: 2px;
+	background-color: #E67B67;
+	cursor: pointer;
+}
+
+/*停用提示信息*/
+#message{	
+	color: #F6F02D;
+}
+
+/*新增人员*/
+#add{
+	border: none;
+	border-radius: 2px;
+	background-color: #40EA58;
+	cursor: pointer;
+}
+
+/*停用人员*/
+#out{
+	border: none;
+	border-radius: 2px;
+	background-color: #E67B67;
+	cursor: pointer;
+}
+
+

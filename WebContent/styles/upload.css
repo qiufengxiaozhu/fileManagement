@@ -1,0 +1,51 @@
+@charset "UTF-8";
+
+body{
+	
+	/* background-color:
+	 opacity:0.1; */
+	/* margin:20px 20px 20px 20px; */
+} 
+
+/*文件上传div*/
+#upload{
+	width: 98.9%;
+	height: 600px;
+	margin:5px 0px 0px 5px; 
+	padding: 20px 20px 0px 20px;
+	border: 1px solid blue;
+}
+
+/*标题*/
+#Head_title{	
+	margin-bottom: 10px;
+	font-family: 楷体;
+	font-size: 26px;
+	color: #1B1718;
+}
+
+/*文件上传页面*/
+table{
+	border: 1px soild #ccc;
+	border-collapse:collapse;
+}
+
+/*增加表格内边框*/
+td,th{
+	border:1px solid #ccc;
+}
+
+/*表格第一行*/
+#first{
+	
+	text-align: center;
+	color: red;
+}
+
+/*表格第五行*/
+#five,#sex{
+	
+	text-align: center;
+}
+
+

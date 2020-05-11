@@ -1,0 +1,873 @@
+<!DOCTYPE>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新闻管理</title>
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link href="/css/third/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/third/font-awesome.min.css" rel="stylesheet">
+    <link href="/css/third/custom.css" rel="stylesheet">
+    <link href="/css/third/layers/default/layer.css" rel="stylesheet">
+    <link href="/css/third/dataTables.bootstrap.css" rel="stylesheet">
+    <link href="/css/third/animate.min.css" rel="stylesheet">
+    <link href="/css/third/sweetalert.css" rel="stylesheet"/>
+    <link href="/css/third/toastr.min.css" rel="stylesheet"/>
+    <link href="/css/style.min.css" rel="stylesheet">
+    <link href="/css/third/zTree/zTreeStyle/zTreeStyle.css" rel="stylesheet">
+    <link href="/css/third/webuploader.css" rel="stylesheet">
+    <link href="/css/admin/avatar.css" rel="stylesheet">
+    <#--<link href="/css/third/bootstrap-select.css" rel="stylesheet">-->
+
+    <style>
+        .webuploader-container div {
+            width:80px;
+        }
+        .dropdown-menu.open .inner.open{height:200px}
+        .dropdown-menu.open{width: 100%;}
+    </style>
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox">
+                <div class="ibox-content form-inline z-relative">
+                    <div class='col-sm-12'>
+                    <@hasPermission name="oaManager:post:create">
+                        <button class='btn btn-success' data-toggle='modal' id="add-btn" onclick="getNewsCategory()">
+                            新建
+                        </button>&nbsp;&nbsp;
+                    </@hasPermission>
+                    <@hasPermission name="oaManager:post:batchDelete">
+                        <button class='btn btn-success btn-danger' id="delete-items">
+                            批量删除
+                        </button>
+                    </@hasPermission>
+                        <div class='querybtn my-querybtn'>
+                            <input type='text' name='search' id='search_name' placeholder='请输入标题' class='form-control search-input'>
+                            <input type="text" name="startTime" id="startTime" startDate placeholder="发布开始时间" class="form-control">
+                            <input type="text" name="endTime" id="endTime" endDate placeholder="发布终止时间" class="form-control">
+
+                            <button class='btn btn-primary mgl my-mgl research-btn' >
+                                搜索
+                            </button>&nbsp;&nbsp;
+
+                        </div>
+                    </div>
+                    <div id='search' class='search-group' style='display:none;'>
+
+                    </div>
+                    <table id="post-list-table" class="table my-table table-bordered dataTables-example">
+                        <thead>
+                        <tr>
+                            <th>id</th>
+                            <th>新闻标题</th>
+                            <th>新闻正文</th>
+                            <th>发布状态</th>
+                            <th>发布时间</th>
+                            <th>点击量</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<#--以下是模态框-->
+<div class="modal inmodal fade modal-form " id="myModal5" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span
+                        class="sr-only">Close</span></button>
+                <h4 class="modal-title">新建新闻</h4>
+            </div>
+            <small class="font-bold">
+                <div class="modal-body fix-height" id="newsTable">
+                <#--表单-->
+                    <form class="form-horizontal" id="post_form">
+                        <input type="hidden" name="id" id="id">
+                        <!-- 附件上传 隐藏传值  开始 -->
+                        <input id="attachIdss" type="hidden" />
+                        <!-- 附件上传 隐藏传值  结束 -->
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label my-control-label ">新闻标题：</label>
+                            <div class="col-sm-6">
+                                <input type="text" name="title" maxlength="64" id="title" placeholder="新闻标题" class="form-control">
+                            </div>
+                            <div>
+                                <i class="i_context my-i_context">*</i>
+                            </div>
+                        </div>
+                        <div class="form-group" id="publicDate">
+                            <label class="col-sm-3 control-label my-control-label " id = "publicTime">发布时间：</label>
+                            <div class="col-sm-6">
+                                <input type="text" name="newsDate" maxlength="64" id="newsDate" placeholder="发布时间" class="form-control">
+                            </div>
+                            <div>
+                                <i class="i_context my-i_context">*</i>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label my-control-label ">所在时区：</label>
+                            <div class="col-sm-6">
+                                <select id="timeZone" name="timeZone" class="form-control">
+                                    <#--<option value="0" selected="selected">选择时区</option>-->
+                                    <option value="1" selected="selected">第一时区</option>
+                                    <option value="2">第二时区</option>
+                                    <option value="3">第三时区</option>
+                                    <option value="4">第四时区</option>
+                                </select>
+                            </div>
+                            <div>
+                                <i class="i_context my-i_context">*</i>
+                            </div>
+                        </div>
+
+                        <#--<div class="form-group">-->
+                            <#--<label class="col-sm-3 control-label my-control-label">发布时间：</label>-->
+                            <#--<div class="col-sm-6">-->
+
+                                <#--&lt;#&ndash;日历控件&ndash;&gt;-->
+                                <#--<input type="text" id="newsDate" name="newsDate" class="form-control"/>-->
+                                <#--<img id="calendar_btn" src="/lhgcalendar/images/date.gif"-->
+                                     <#--title="选择日期" onclick="J.calendar.get({id:'newsDate'});"/>-->
+                            <#--</div>-->
+                        <#--</div>-->
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label my-control-label ">新闻类别：</label>
+                            <div class="col-sm-6">
+                                <select id="category" name="fk_categoryid" class="form-control"></select>
+                            </div>
+                            <div>
+                                <i class="i_context my-i_context">*</i>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label my-control-label">新闻封面：</label>
+                            <div class="col-sm-6">
+                                <div class="col-sm-9 big-photo">
+                                    <div id="preview">
+                                        <img id="imghead" border="0" src="/img/photo_icon.png" width="90" height="90" onclick="$('#previewImg').click();">
+                                    </div>
+                                    <input type="file" onchange="previewImage(this)" style="display: none;" id="previewImg" weblitRelativePath>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" id="newsContent">
+                            <label class="col-sm-3 control-label my-control-label">新闻正文：</label>
+                            <div class="col-sm-6">
+                                <textarea class="form-control" rows="5" cols="" name="content" id="content"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="" id="disClick">
+                            <label class="col-sm-3 control-label my-control-label">附件：</label>
+                            <div style="width:80;height: 35px;position: relative;margin:0 auto">
+                                <div id="xg_rar">上传附件</div>
+                            </div>
+                            <div id="fileShowName" style="text-align: center;margin:0 auto"></div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="modal-footer">
+                    <input type="hidden" id="add-type">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" id="save-btn-test">保存</button>
+                </div>
+            </small>
+        </div>
+        <small class="font-bold">
+        </small>
+    </div>
+    <small class="font-bold">
+    </small>
+</div>
+
+<script src="/js/third/jquery.min.js"></script>
+<script src="/js/pluginInit/animation.js"></script>
+<script src="/js/third/bootstrap.min.js"></script>
+<script src="/js/third/jquery.validate.min.js"></script>
+<script src="/js/third/jquery.dataTables.min.js"></script>
+<script src="/js/third/dataTables.bootstrap.js"></script>
+<script src="/js/third/layer/layer.min.js"></script>
+<script src="/js/third/icheck.min.js"></script>
+<script src="/js/third/sweetalert.min.js"></script>
+<script src="/js/third/toastr.min.js"></script>
+<script src="/js/third/laydate/laydate.js"></script>
+<script src="/js/pluginInit/dataecho.js"></script>
+<script src="/js/third/laydate/laydate.js"></script>
+<script src="/js/pluginInit/laydateInit.js"></script>
+<script src="/js/zudp.js"></script>
+<script type="text/javascript" src="/js/third/jquery.ztree.all.js"></script>
+<script src="/js/third/bootstrap-suggest.min.js"></script>
+<script src="/js/sys/avatar.js"></script>
+<script src="/js/third/webuploader.js"></script>
+<script src="/js/rest.js"></script>
+
+<script type="text/javascript" charset="utf-8" src="/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="/ueditor/ueditor.all.min.js"> </script>
+<!--建议手动加在语言，避免在ie下有时因为加载语言失败导致编辑器加载失败-->
+<!--这里加载的语言文件会覆盖你在配置项目里添加的语言类型，比如你在配置项目里配置的是英文，这里加载的中文，那最后就是中文-->
+<script type="text/javascript" charset="utf-8" src="/ueditor/lang/zh-cn/zh-cn.js"></script>
+
+<script>
+
+    //图片上传预览    IE是用了滤镜。
+    function previewImage(file)
+    {
+        var MAXWIDTH  = 90;
+        var MAXHEIGHT = 90;
+        var div = document.getElementById('preview');
+        if (file.files && file.files[0])
+        {
+            div.innerHTML ='<img id=imghead onclick=$("#previewImg").click()>';
+            var img = document.getElementById('imghead');
+            img.onload = function(){
+                var rect = clacImgZoomParam(MAXWIDTH, MAXHEIGHT, img.offsetWidth, img.offsetHeight);
+                img.width  =  rect.width;
+                img.height =  rect.height;
+//                 img.style.marginLeft = rect.left+'px';
+                img.style.marginTop = rect.top+'px';
+            }
+            var reader = new FileReader();
+            reader.onload = function(evt){img.src = evt.target.result;}
+            reader.readAsDataURL(file.files[0]);
+//            alert(reader.readAsDataURL(file.files[0]));
+        }
+        else //兼容IE
+        {
+            var sFilter='filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale,src="';
+            file.select();
+            var src = document.selection.createRange().text;
+            div.innerHTML = '<img id=imghead>';
+            var img = document.getElementById('imghead');
+            img.filters.item('DXImageTransform.Microsoft.AlphaImageLoader').src = src;
+            var rect = clacImgZoomParam(MAXWIDTH, MAXHEIGHT, img.offsetWidth, img.offsetHeight);
+            status =('rect:'+rect.top+','+rect.left+','+rect.width+','+rect.height);
+            div.innerHTML = "<div id=divhead style='width:"+rect.width+"px;height:"+rect.height+"px;margin-top:"+rect.top+"px;"+sFilter+src+"\"'></div>";
+        }
+    }
+    function clacImgZoomParam( maxWidth, maxHeight, width, height ){
+        var param = {top:0, left:0, width:width, height:height};
+        if( width>maxWidth || height>maxHeight ){
+            rateWidth = width / maxWidth;
+            rateHeight = height / maxHeight;
+
+            if( rateWidth > rateHeight ){
+                param.width =  maxWidth;
+                param.height = Math.round(height / rateWidth);
+            }else{
+                param.width = Math.round(width / rateHeight);
+                param.height = maxHeight;
+            }
+        }
+        param.left = Math.round((maxWidth - param.width) / 2);
+        param.top = Math.round((maxHeight - param.height) / 2);
+        return param;
+    }
+    //图片上传预览    IE是用了滤镜。上传图片代码到此截止
+
+    var dataTable;
+    var urlstr="/api/news";
+    var formIdStr="#post_form";
+    var sys_url=window.location.host;
+
+    //初始化百度富文本框  id='content'
+    var ue = UE.getEditor('content',{
+
+        // initialFrameWidth :800,//设置编辑器宽度
+
+        initialFrameHeight:300,//设置编辑器高度
+
+        scaleEnabled:true});
+
+    UE.Editor.prototype._bkGetActionUrl = UE.Editor.prototype.getActionUrl;
+    UE.Editor.prototype.getActionUrl = function(action) {
+        if (action == 'uploadimage' || action == 'uploadscrawl' || action == 'uploadimage' || action == 'uploadvideo' || action == 'uploadfile') {
+            return '/Ueditors/uploadimage';//指定访问路径
+        } else {
+            return this._bkGetActionUrl.call(this, action);
+        }
+
+
+    }
+    //获得编辑器带格式的内容
+    function getContent() {
+        return UE.getEditor('content').getContent();
+    }
+    //获得编辑器的纯文本内容
+    function getContentTxt() {
+        return UE.getEditor('content').getContentTxt();
+    }
+    /**
+     * //初始化百度富文本框  id='content'  end
+     */
+
+    $(document).ready(function () {
+
+        $("#post_form").validate({
+            rules: {
+                title:{
+                    required:true,
+                    remote: {
+                        url:"/api/news/checkName",
+                        type:"get",
+                        data: {
+                            "title":function () {
+                                return $("#title").val();
+                            },
+                            "id":function () {
+                                return $("#id").val();
+                            }
+                        },
+                        dataFilter: function(data, type) {
+                            var da=JSON.parse(data).data;
+                            if(zudp.util.isBoolean(da)){
+                                return da;
+                            }else{
+                                return false;
+                            }
+                        }
+                    }
+                },
+//                identification:{
+//                    required:true,
+//                    rangelength:[0,64],
+//                    remote: {
+//                        url:"/api/post/checkIdenty",
+//                        type:"get",
+//                        data: {
+//                            "identy":function () {
+//                                return $("#identification").val();
+//                            },
+//                            "id":function () {
+//                                return $("#id").val();
+//                            }
+//                        },
+//                        dataFilter: function(data, type) {
+//                            var da=JSON.parse(data).data;
+//                            if(zudp.util.isBoolean(da)){
+//                                return da;
+//                            }else{
+//                                return false;
+//                            }
+//                        }
+//                    }
+//                },
+
+                content:{
+                    rangelength:[0,1000]
+                }
+            },
+            messages: {
+                title: {
+                    required: "请输入新闻标题",
+                    remote: "新闻标题已存在"
+                },
+//                identification: {
+//                    required: "请输入岗位标识",
+//                    remote: "岗位标识已存在"
+//                },
+                content: {
+                    rangelength:"字符个数不能超过1000"
+                }
+            },ignore: []
+        });
+
+        findList();
+
+        //按钮隐藏
+        getNewsCategory();
+        //按钮显示
+        detailsstrBtn();
+
+
+        var setValFun = function () {
+            $("#xg_rar").html('上传附件');
+            $("#fileShowName").html('');
+            $("#attachIdss").val('');
+            //清空文本框内容
+            UE.getEditor('content').setContent("");
+            //初始化上传工具
+            initUpload();
+        };
+        var setOtherVal = function () {
+            var id = $(formIdStr).find("input[name='id']").eq(0).val();
+
+            //取值回显
+            zudp.ajax(urlstr + "/" + id).get("").then(function (data) {
+                dataEcho(formIdStr, data);
+                if(data.content!=null && data.content.length>0){
+                    UE.getEditor('content').setContent(data.content);
+                }else{
+                    UE.getEditor('content').setContent("");
+                }
+
+                var d = data;
+                var attachPaths = d.attachPaths;
+                var attachNames = d.attachNames;
+                var attachIds = d.attachIdss;
+                var tmpAttachPath = "";
+                if (attachPaths) {
+                    for (var i = 0; i < attachPaths.length; i++) {
+                        tmpAttachPath += "<p>" +
+                                "<a href='//" + sys_url + "/" + attachPaths[i] + "' download='" + attachNames[i] + "'>" +
+                                attachNames[i] + "</a>" +
+                                "<input type='hidden' name='fid' value='" + attachIds[i] + "'>&nbsp;&nbsp;&nbsp;&nbsp;" +
+                                "<span style='color:red' onclick='deleteFile(this)'>删除</span>" +
+                                "<input type='hidden' name='attachPathed' value='" + attachPaths[i] + "'>" +
+                                "<input type='hidden' name='attachNameed' value='" + attachNames[i] + "'>	" +
+                                "</p>";
+                    }
+                }
+                $("#fileShowName").html(tmpAttachPath);//附件赋值
+            }, function (error) {
+            });
+
+            $("#xg_rar").html('上传附件');
+            //附件控件
+            initUpload();
+
+        };
+        var saveFormFun = function () {
+
+            if ($(formIdStr).valid()) {
+
+                var data = zudp.util.formData2json("form");
+                data = $.parseJSON(data);
+                var attachPaths = getAttachPath();//附件路径传参
+                var attachNames = getAttachName();//附件名称 传参
+                var attachIdss = getAttachIdss();//要删除掉的ids
+                data.attachPaths = attachPaths;
+                data.attachNames = attachNames;
+                data.attachIdss = attachIdss;
+
+                data.content=getContent();
+                data.contentnohtml=getContentTxt();
+                data = JSON.stringify(data);
+
+//                debugger
+                var mymesg = "新建";
+                if ($("#id").val() != '') {
+                    mymesg = "修改";
+                }
+
+                zudp.ajax(urlstr).post(data).then(function (da) {
+
+                    zudp.plugin.dialog("success").alert(mymesg + "成功" + "！", "提示");
+                    dataTable.ajax.reload();
+                    $(".modal-form").modal("hide");
+                });
+            }
+        };
+
+        var obj={
+            url: urlstr,
+            formId: formIdStr,
+            title: "{type}新闻",
+            success: "数据{msg}",
+            error: "数据{msg}",
+            disabledName: ["type", 'value'],
+            hideInputName:[],
+            search: [".clear-input", "#search",".search-input"],
+
+            //富文本框相关
+            addBtnFun: setValFun,
+            editBtnFun: setOtherVal,
+            saveForm: saveFormFun
+
+        };
+        //初始化增删改查参数
+        initForm(obj);
+
+
+    });
+
+
+    //提示
+    function swalFunction(a,b,c) {
+        swal({
+            title: a,
+            showCancelButton: true,
+            cancelButtonText: "取消",
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: c,
+        },b);
+    }
+
+
+    //列表数据初始化方法
+    function findList() {
+
+        var urls="/api/news";
+        dataTable=zudp.plugin.table('#post-list-table')
+                .url(urls)
+                .search(function () {
+                    return {
+                        "title":$("#search_name").val(),
+                        "starTime": $("#starTime").val(),
+                        "endTime": $("#endTime").val()
+                    }
+                })
+                .columns( [
+                    {data: 'id',visible: false},
+                    {data: 'title',width: '16%',
+                        render:function(data, type, row){
+                            var suf="...";
+                            if(data!=null && data.length<15){
+                                suf="";
+                            }
+                            var ah="<a title='"+data+"'>"+data.substr(0,15)+suf+"</a>";
+                            return ah;
+                        }
+                    },
+                    {data: 'content',width: '32%',
+                        render:function(data, type, row){
+                        var suf="...";
+                        if(data!=null && data.length<28){
+                            suf="";
+                        }
+                            var ah="<a title='"+data+"'>"+data.substr(0,28)+suf+"</a>";
+                            return ah;
+                        }
+                    },
+                    {data: 'status', width: '8%'},
+                    {width: '16%',
+                        render: function (data, type, row) {
+                            if(data.newsDate == null){
+                                return "无";
+                            }
+                            else
+                                return data.newsDate;
+                        }
+                    },
+                    {data: 'clicks', width: '6%'},
+//                    {data: 'mark',render:function(data, type, row){
+//                        var suf="...";
+//                        if(data!=null && data.length<30){
+//                            suf="";
+//                        }
+//                            var ah="<a title='"+data+"'>"+data.substr(0,20)+suf+"</a>";
+//                        return ah;
+//                     }
+//
+//                    },
+                    {
+                        render: function (data, type, row) {
+                            var btn = "";
+                            var editstr=""; //编辑
+                            var delstr="";  //删除
+                            var detailsstr="";  //预览
+                            var release=""; //发布
+                            var cancel="";  //撤销发布
+
+//                             自带详情框 onclick="getNewsCategory(this)"
+                            detailsstr = '<button onclick="detailsstrBtn()" class="btn btn-success btn-sm row-detail" value="{id}" ><i class="fa fa-pencil"></i>详情</button>';
+//                            detailsstr = '<button id = "detailsstrBtn" class="btn btn-success btn-sm " value="{id}" style="margin-left: 5px"><i class="fa fa-pencil"></i>详情</button>';
+                            editstr = '<button onclick="getNewsCategory()" class="btn btn-info btn-sm row-edit updateOpBtn" value="{id}" style="margin-right: 5px"><i class="fa fa-pencil"></i>编辑</button>';
+                            delstr = zudp.template.delBtn;
+
+
+                            release = '<button onclick="releaseBtn(this)" class="btn btn-sm btn-success" id="release" style="margin-left: -5px" value="{id}"><i class="fa fa-pencil"></i>发布</button>';
+                            cancel = '<button onclick="cancelBtn(this)" class="btn btn-danger btn-sm " id="cancel" style="margin-left: 5px" value="{id}"><i class="fa fa-close"></i>撤销发布</button>';
+
+                            if(data.status == "编辑状态" || data.status == "未发布状态"){
+                                btn += editstr+detailsstr+delstr+release;
+                            }
+                            else
+                                btn += detailsstr + cancel;
+                            return zudp.util.render(btn, row);
+
+                        }
+                    }
+                ])
+                .then();
+
+    }
+
+    //隐藏按钮（新建、编辑）
+    function getNewsCategory() {
+
+//        $("#publicTime").css("display","none");
+//        $("#newsDate").css("display","none");
+//        $("#publicDate").css("display","none");
+    }
+
+    //详情
+    function detailsstrBtn() {
+//        $("#publicTime").css("display","block");
+//        $("#newsDate").css("display","block");
+        $("#publicDate").css("display","block");
+//        $("#xg_rar").attr("disabled", "disabled");
+//        $("#newsContent").attr("disabled", "disabled");
+//        $("#newsTable").attr("disabled", "disabled");
+//        document.getElementById("xg_rar").setAttribute("disabled", "disabled");
+    }
+
+    //发布
+    $(document).on("click", '#release', function (e) {
+        //清除冒泡
+        if (e && e.stopPropagation) {
+            e.stopPropagation();
+        } else {
+            window.e.cancelBubble = true;
+        }
+
+
+
+    });
+
+    /**
+     * 保存方法
+     */
+    $(document).on("click", '#save-btn-test', function (e) {
+        
+         
+
+
+
+    });
+    //撤销发布
+    $(document).on("click", '#cancel', function (e) {
+        //清除冒泡
+        if (e && e.stopPropagation) {
+            e.stopPropagation();
+        } else {
+            window.e.cancelBubble = true;
+        }
+    });
+//    //详情
+//    $(document).on("click", '#detailsstrBtn', function (obj) {
+//        //清除冒泡
+//        if (obj && obj.stopPropagation) {
+//            obj.stopPropagation();
+//        } else {
+//            window.e.cancelBubble = true;
+//        }
+//
+//        $(".modal-two").modal("show");
+//
+////        //设置隐藏组件
+////        for (var i = 0; i < e.hideInputName.length; i++) {
+////            $(".modal form").find("*[name=" + e.hideInputName[i] + "]").parents('.form-group').css("display", 'none');
+////        }
+//        var idstr = $(obj).val();
+//        //取值回显
+////            zudp.ajax("/api/news/get").post(idstr).then(function (obj) {
+//        zudp.ajax("/api/news/get?id=" + idstr).get().then(function (data) {
+//                dataEcho("myModal5", data);
+//                }, function (error) {
+//            });
+//
+//        //设置禁用
+//        for (var i = 0; i < obj.disabledName.length; i++) {
+//            $(".modal form").find("*[name=" + obj.disabledName[i] + "]")
+//                    .attr("disabled", true);
+//        }
+//
+//    });
+
+    //发布
+    function releaseBtn(obj){
+
+        //获取此行id值
+        var idstr = $(obj).val();
+
+//        alert(idstr);
+
+        //发布状态
+        var status;
+//        zudp.ajax("/api/news/get?id=" + idstr).get().then(function (value) {
+//
+//            //通过此行id读取出本表发布状态
+//            status = value.status;
+//
+////            alert(status);
+//        });
+        zudp.ajax("/api/news/update_release?id=" + idstr).get().then(function (value) {
+            document.location.reload();
+        });
+
+
+    }
+
+    //撤销发布
+    function cancelBtn(obj) {
+
+        //获取此行id值
+        var idstr = $(obj).val();
+
+        zudp.ajax("/api/news/update_cancel?id=" + idstr).get().then(function (value) {
+            document.location.reload();
+        });
+
+    }
+    
+    <!--   动态获取新闻种类 -->
+    function getNewsCategory(obj) {
+
+        $("#publicDate").css("display","none");//按钮隐藏
+
+        $("#calendar_btn").css("display","inline");	//显示日历控件
+
+        //获取列表上此列字段
+        var str = $(obj).parent().prev().prev().text();
+
+        //获取此行id值
+        var idstr = $(obj).val();
+
+        //接收读取出来的本张表外键，也就是类别表主键
+        var categoryId = "";
+
+        //如果列表上此字段不为空
+        if (str != "") {
+            zudp.ajax("/api/news/get?id=" + idstr).get().then(function (value) {
+
+                //通过此行id读取出本表外键
+                categoryId = value.fk_categoryid;
+            });
+        }
+
+        //读出类别表所有的类别字段
+        $("#category").find("option").remove();
+        zudp.ajax("/api/category/clist").get().then(function (value) {
+
+
+            //循环读出
+            for (var k = 0; k < value.length; k++) {
+
+                //如果类别表的类别字段为空，就置为空
+                if (value[k].category  == null) {
+                    value[k].category = "";
+                }else{
+                    //如果读取出本表外键，就与类别表主键进行匹配
+                    if (categoryId != "") {
+                        if (value[k].id == categoryId) {
+
+                            //成功匹配则将此类别标记为选中
+                            $("#category").append("<option value='" + value[k].id + "' selected='selected'>" + value[k].category + "</option>");
+                        } else {
+
+                            //否则就按读取顺序将类别排列在下拉框中
+                            $("#category").append("<option value='" + value[k].id+ "'>" + value[k].category  + "</option>");
+                        }
+                    } else {
+
+                        //未匹配就按读取顺序将类别排列在下拉框中
+                        $("#category").append("<option value='" + value[k].id+ "'>" + value[k].category  + "</option>");
+                    }
+                }
+            }
+        }, function (reason) {
+            zudp.plugin.dialog("error").alert("获取用户列表失败！", "提示");
+        });
+    };
+
+    function formatDate(date) {
+        if (date == null) return "";
+        date = new Date(date);
+        var Y = date.getFullYear() + '-';
+        var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+        var D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + ' ';
+        return Y + M + D;
+    };
+
+    //初始化上传
+    function initUpload(){
+
+        var uploader = WebUploader.create({
+            // swf文件路径
+            swf: '/css/third/Uploader.swf',
+            auto: true, //自动提交保存
+            // 文件接收服务端。
+            server: '/upload/custom',
+
+            // 选择文件的按钮。可选。
+            // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+            pick: '#xg_rar',
+
+            // 不压缩image, 默认如果是jpeg，文件上传前会压缩一把再上传！
+            resize: false,
+
+//            fileNumLimit: 1, 规定上传数量
+            //重复上传
+            duplicate :true,
+            accept:{
+                extensions:'bmp,jpg,png,rar,gif,zip,xls,xlsx,doc,docx,mp4',
+                title:'file',
+                mimeTypes:'*/*'
+            }
+        });
+        // 文件上传成功，给item添加成功class, 用样式标记上传成功。
+        uploader.on( 'uploadSuccess', function( file,response) {
+            //debugger;
+
+            var name = file.name;
+            var fileurl = response.data;
+            console.info(response);
+            $("#fileShowName").append(
+                "<p>" +
+                    "<a href='//"+sys_url+"/"+fileurl+"' download='"+name+"'>"+name+"</a>" +
+                    "<input type='hidden' name='fid'>&nbsp;&nbsp;&nbsp;&nbsp;" +
+                    "<span style='color:red' onclick='deleteFile(this)'>删除</span>" +
+                    "<input type='hidden' name='attachPath' value='"+fileurl+"'>" +
+                    "<input type='hidden' name='attachName' value='"+name+"'>" +
+                "</p>");
+
+            //change(response);
+        });
+    }
+
+    //删除，删除节点
+    function deleteFile(obj) {
+        var fid = $(obj).parent().find("input[name='fid']").eq(0).val();
+        if (fid != '') {
+            var str = $("#attachIdss").val() + "," + fid;
+            if (str.indexOf(",") == 0) {
+                str = str.substr(1);
+            }
+            $("#attachIdss").val(str);
+        }
+        $(obj).parent().remove();
+    }
+
+    //获取在节点上的文件路径
+    function getAttachPath() {
+        var tempAttachPath = [];
+        var $attachPath = $("input[name='attachPath']");
+        $.each($attachPath, function (k, v) {
+            tempAttachPath.push($(v).val());
+        })
+        return tempAttachPath;
+    }
+    //获取在节点上的文件路名称
+    function getAttachName() {
+        var tempAttachName = [];
+        var $attachName = $("input[name='attachName']");
+        $.each($attachName, function (k, v) {
+            tempAttachName.push($(v).val());
+        })
+        return tempAttachName;
+    }
+
+    //获取所有附件Ids
+    function getAttachIdss() {
+        var tempAttachIdss = [];
+        var $attachIdss = $("#attachIdss").val().split(",");
+        $.each($attachIdss, function (k, v) {
+            tempAttachIdss.push(v);
+        })
+        return tempAttachIdss;
+    }
+
+</script>
+</body>
+</html>

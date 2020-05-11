@@ -1,0 +1,58 @@
+@charset "UTF-8";
+
+/*背景图片*/
+body{
+ 	 background: url('../images/bg3.jpg') repeat center;	 
+ }
+
+/*头div*/
+#divHead{
+	height: 160px;
+	margin-top: -20px;
+	margin-bottom: 5px;
+	border: 0px solid blue;
+	background-color: #3DB3E1;
+}
+
+/*系统标题*/
+#Head_title{
+	padding-top: 40px; 
+	font-family: 楷体;
+	font-size: 40px;
+	color: #E61542;
+	text-align: center;
+}
+
+/*显示登录进来的用户名*/
+#name_div{
+	float: right;
+}
+
+/*退出登录*/
+#exit_btn{
+	margin-right: 10px;
+}
+
+
+/*主div*/
+#divMain{
+	height: 700px;
+	border: 1px solid #ccc;
+}
+
+/*菜单栏页面*/
+#menu{
+	width: 20%;
+	height: 610px;
+	border: 0px solid #ccc;
+}
+
+/*正文页面*/
+#content{
+	width: 79.6%;
+	height: 610px;
+	border: 0px solid #ccc;
+}
+
+
+

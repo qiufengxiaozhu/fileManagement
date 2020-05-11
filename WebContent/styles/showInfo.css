@@ -1,0 +1,106 @@
+@charset "UTF-8";
+
+body{
+	overflow-x : hidden;   /*去掉横条 */
+    overflow-y : hidden;   /*去掉竖条 */
+}
+
+/*表单div*/
+#showInfo{
+	width: 98.9%;
+	height: 580px;
+	margin:-5px 0px 0px -5px;
+	padding: 20px 0px 0px 20px;
+	border: 1px solid green;
+}
+
+/*form表单*/
+table{
+	width: 600px;
+	height: 460px;
+	margin: 0px auto;
+	margin-top: 20px;
+	border-collapse:collapse;
+	border: 5px solid #A0A0A0;
+}
+
+/*增加表格内边框*/
+th{
+	width: 130px;
+}
+td,th{
+	border:1px solid #A0A0A0;
+}
+
+/*账号、用户名、密码、确认密码、电话号码、电子邮箱输入框、出生日期*/
+#num_text,#user_text,#pwd_text,#repwd_text,#tel_text,#mail_text,#birthday_text{
+	width: 200px;
+	height: 20px;
+	margin-left: 15px;
+	border-radius: 2px;
+	border: none;
+}
+
+/*输入账号 用户名 密码 电话号码 邮箱时的提示*/
+#empty_span,#num_span,#user_span,#pwd_span,#tel_span,#mail_span{
+	margin-left: 20px;
+	font-size: 17px;
+	display: none;
+	color: #CD0927;
+}
+
+/*选择性别*/
+#sex_radio{
+	margin-left: 25px;
+}
+
+/*性别框*/
+.sex_text{
+	width: 20px;
+	height: 20px;
+	border: none; 
+ 	background-color: #ACD2F6;
+ 	
+}
+
+/*日历按钮*/
+#calendar_btn{
+	vertical-align:middle;/*垂直居中*/
+	display: none;
+}
+
+/*信息修改按钮*/
+#edit_btn{
+	width: 100px;
+	height:40px;
+	margin-right: 20px;
+	background-color: #E8774D;
+	border: none;
+	border-radius: 8px;
+	cursor: pointer;
+	font-family: 楷体;
+	font-size: 18px;
+	transition: all 0.5s;
+}
+
+/*取消与保存按钮*/
+#cancel_btn,#save_btn{
+	width: 60px;
+	height:40px;
+	background-color: #7AF356;
+	border: block;
+	border-radius: 8px;
+	cursor: pointer;
+	font-family: 楷体;
+	font-size: 18px;
+	transition: all 0.5s;
+	display: none;
+}
+
+/*信息修改 取消 保存按钮悬浮*/
+#edit_btn:hover,#cancel_btn:hover,#save_btn:hover{
+	
+	box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19);
+	background-color: #4FC9C6;
+}
+

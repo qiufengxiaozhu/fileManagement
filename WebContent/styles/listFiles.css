@@ -1,0 +1,36 @@
+@charset "UTF-8";
+
+/* body{
+	overflow-x : hidden;   去掉横条
+    overflow-y : hidden;   去掉竖条
+} */
+
+/*文件下载上传div*/
+#download{
+	width: 98.9%;	
+	margin:5px 0px 0px 5px; 
+	padding: 20px 20px 0px 20px;
+	border: 1px solid blue;
+/* 	text-align: center;
+	vertical-align: middle;  */
+	
+}
+
+/*标题*/
+#Head_title{	
+	
+	font-family: 楷体;
+	font-size: 26px;
+	color: #1B1718;
+}
+
+/*文件下载页面*/
+table{
+	border: 1px soild #ccc;
+	border-collapse:collapse;
+}
+
+/*增加表格内边框*/
+td,th{
+	border:1px solid #ccc;
+}
